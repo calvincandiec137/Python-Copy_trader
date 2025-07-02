@@ -5,8 +5,11 @@ import threading
 import hashlib
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qs
+from load_keys import load_credentials
 
-PARENT = {
+PARENT, CHILD_ACCOUNTS = load_credentials("keys.xlsx")
+
+"""PARENT = {
     "api_key": "b8280d36fc1726ef594ff258b454e265",
     "api_secret": "e3f3b525b46fd5e3dee47df4e58f4923",
     "port": 8000
@@ -18,7 +21,7 @@ CHILD_ACCOUNTS = [
         "api_secret": "a419d2e47093d1ec60368fb30acb0ea6",
         "port": 8001
     }
-]
+]"""
 
 class TokenHandler(BaseHTTPRequestHandler):
     def do_GET(self):

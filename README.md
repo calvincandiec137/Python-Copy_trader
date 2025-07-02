@@ -1,1 +1,0 @@
-# Python-Copy_trader
