@@ -68,20 +68,21 @@ def fetch_trades(api_key, token):
     resp = requests.get("https://api.gwcindia.in/v1/tradebook", headers=get_headers(api_key, token))
     return resp.json().get("data", [])
 
-def place_order(trade, api_key, token):
+def place_order(trade, api_key, token, multiplier):
     payload = {
         "tsym": trade["tsym"],
         "exchange": trade["exchange"],
         "trantype": trade["trantype"],
         "validity": "DAY",
         "pricetype": trade["pricetype"],
-        "qty": trade["qty"],
+        "qty": str(int(trade["qty"])*multiplier),
         "discqty": "0",
         "price": trade["price"],
         "trgprc": "0",
         "product": trade["product"],
         "amo": "NO"
     }
+    print(type(payload["qty"]))
     resp = requests.post("https://api.gwcindia.in/v1/placeorder", headers=get_headers(api_key, token), json=payload)
     return resp.json()
 
@@ -90,7 +91,8 @@ def main():
     children = [
         {
             "api_key": acc["api_key"],
-            "token": get_bearer_token(acc["api_key"], acc["api_secret"], acc["port"])
+            "token": get_bearer_token(acc["api_key"], acc["api_secret"], acc["port"]),
+            "multiplier": acc.get("multiplier", 1)
         }
         for acc in CHILD_ACCOUNTS
     ]
@@ -107,15 +109,15 @@ def main():
                 if trade_id not in seen:
                     seen.add(trade_id)
                     for child in children:
-                        result = place_order(trade, child["api_key"], child["token"])
+                        result = place_order(trade, child["api_key"], child["token"], child["multiplier"])
                         print(f"{trade['tsym']} copied → {result.get('status')}")
             time.sleep(10)
         except KeyboardInterrupt:
             print("Stopped by user")
             break
-        except Exception as e:
+    """       except Exception as e:
             print("Error:", e)
-            time.sleep(5)
+            time.sleep(5)"""
 
 if __name__ == "__main__":
     main()
