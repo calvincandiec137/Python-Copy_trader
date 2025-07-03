@@ -14,15 +14,11 @@ def load_credentials(excel_path):
     children = []
     for i, (_, row) in enumerate(child_rows.iterrows(), start=1):
         multiplier = row.get("multiplier", 1)
-        multiplier = int(multiplier) if pd.notna(multiplier) else 1
+        multiplier = int(multiplier) if pd.notna(multiplier) else 0
         children.append({
-            "api_key": row["api_key"],
-            "api_secret": row["api_secret"],
+            "api_key": row["api_key"].strip(),
+            "api_secret": row["api_secret"].strip(),
             "port": 8000 + i,
             "multiplier": multiplier
         })
-
-    print(parent)
-    print(children)
-
     return parent, children

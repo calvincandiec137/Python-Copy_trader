@@ -8,21 +8,6 @@ from urllib.parse import urlparse, parse_qs
 from load_keys import load_credentials
 
 PARENT, CHILD_ACCOUNTS = load_credentials("keys.xlsx")
-
-"""PARENT = {
-    "api_key": "b8280d36fc1726ef594ff258b454e265",
-    "api_secret": "e3f3b525b46fd5e3dee47df4e58f4923",
-    "port": 8000
-}
-
-CHILD_ACCOUNTS = [
-    {
-        "api_key": "cebef84f4a0a11ded64f5222ba857f90",
-        "api_secret": "a419d2e47093d1ec60368fb30acb0ea6",
-        "port": 8001
-    }
-]"""
-
 class TokenHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         query = parse_qs(urlparse(self.path).query)
@@ -55,7 +40,15 @@ def get_bearer_token(api_key, api_secret, port):
         "signature": signature
     })
 
-    return res.json()["data"]["access_token"]
+    try:
+        return res.json()["data"]["access_token"]
+    except KeyError:
+        print("Login failed.")
+        print("Status code:", res.status_code)
+        print("Response body:", res.text)
+        print()
+        return None
+
 
 def get_headers(api_key, token):
     return {
@@ -82,7 +75,7 @@ def place_order(trade, api_key, token, multiplier):
         "product": trade["product"],
         "amo": "NO"
     }
-    print(type(payload["qty"]))
+    
     resp = requests.post("https://api.gwcindia.in/v1/placeorder", headers=get_headers(api_key, token), json=payload)
     return resp.json()
 
@@ -109,15 +102,18 @@ def main():
                 if trade_id not in seen:
                     seen.add(trade_id)
                     for child in children:
-                        result = place_order(trade, child["api_key"], child["token"], child["multiplier"])
-                        print(f"{trade['tsym']} copied → {result.get('status')}")
+                        if child["multiplier"] > 0:
+                            result = place_order(trade, child["api_key"], child["token"], child["multiplier"])
+                            print(f"{trade['tsym']} copied → {result.get('status')}")
+                        else:
+                            print(f"The multiplier for{child['api_key']} is 0. Cant place any order.")
             time.sleep(10)
         except KeyboardInterrupt:
             print("Stopped by user")
             break
-    """       except Exception as e:
+        except Exception as e:
             print("Error:", e)
-            time.sleep(5)"""
+            time.sleep(5)
 
 if __name__ == "__main__":
     main()
