@@ -92,7 +92,7 @@ def main():
 
     initial_trades = fetch_trades(PARENT["api_key"], parent_token)
     seen = {trade["nstordno"] for trade in initial_trades}
-    print(f"✅ Ignoring {len(seen)} existing trades")
+    print(f"Ignoring {len(seen)} existing trades")
 
     while True:
         try:
