@@ -2,7 +2,8 @@
 # Python-Copy_trader  
 Automated Trade Replication System for GWCIndia Accounts
 
-https://github.com/user-attachments/assets/51431c2c-8aaf-4859-8fdf-2379a3f2bdc8
+
+https://github.com/user-attachments/assets/44881350-a3da-4da2-8761-2a9135ed1bf8
 
 
 
