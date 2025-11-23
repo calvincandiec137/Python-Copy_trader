@@ -2,6 +2,10 @@
 # Python-Copy_trader  
 Automated Trade Replication System for GWCIndia Accounts
 
+https://github.com/user-attachments/assets/51431c2c-8aaf-4859-8fdf-2379a3f2bdc8
+
+
+
 ## Overview
 - Real-time mirroring of trades from a parent account to multiple child accounts.  
 - Uses GWCIndia API for fast and reliable order replication.  
