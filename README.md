@@ -71,6 +71,7 @@ python Goodwill_copy_trader.py
 * Monitor log files for unusual activity.
 
 ## License
+This project is licensed under the MIT `License`. See the LICENSE file for details.
 
 
 
